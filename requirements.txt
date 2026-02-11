@@ -1,0 +1,12 @@
+langgraph
+typing_extensions
+langchain
+langchain-community
+langchain-openai
+faiss-cpu
+pandas
+rank-bm25
+numpy
+python-dotenv
+tiktoken
+streamlit
