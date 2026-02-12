@@ -1,90 +1,81 @@
 # Resource and Capacity Overview
 
 **Project:** Engineering Team Alpha  
-**Version:** 1.0  
+**Version:** 1.1  
 **Last Updated:** Week 12, 2024  
+**Related Milestone:** Advanced Analytics Dashboard – Week 16  
 
 ---
 
-## Resource Allocation
+## Engineering Capacity
 
-### RC-001: Engineering Capacity
+### RC-001: Team Capacity
 **Status:** Claimed  
-**Description:** Current engineering team capacity is sufficient to deliver all Q2 milestones  
-**Details:**
-- Total engineers assigned: 12
-- Parallel workstreams supported: 4
-- No additional hiring required for Q2
+**Owner:** Engineering Lead  
+**Target Validation Date:** Week 14  
 
-**Current Claim:**
-- Team capacity assessed as adequate
-- No formal capacity planning document available
+**Details:**
+- 12 engineers assigned  
+- 4 parallel workstreams supported  
+- No additional hiring planned  
+
+**Evidence Status:**
+No formal capacity planning or workload analysis provided.
 
 ---
 
 ### RC-002: Specialist Availability
 **Status:** Claimed  
-**Description:** Required specialists are available when needed  
-**Details:**
-- Database specialists available for migration
-- Security specialists available for audits
-- Frontend specialists available for analytics UI
+**Owner:** Engineering Lead  
+**Target Validation Date:** Week 14  
 
-**Current Claim:**
-- Specialist availability assumed
-- No confirmed allocation schedule provided
+**Details:**
+- Database support for migration  
+- Security support for audit  
+- Frontend support for analytics  
+
+**Evidence Status:**
+No confirmed allocation schedule available.
 
 ---
 
-## Delivery Capacity
+## Parallel Delivery Feasibility
 
-### DC-001: Parallel Delivery Feasibility
+### DC-001: Q2 Initiative Delivery
 **Status:** Claimed  
-**Description:** Multiple Q2 initiatives can be delivered in parallel  
-**Details:**
-- Analytics Dashboard (Week 16)
-- Mobile App Beta (Week 20)
-- AI Recommendations (Week 24)
+**Owner:** Engineering Lead  
 
-**Current Claim:**
-- Parallel delivery considered feasible
-- No workload distribution analysis found
+**Milestones:**
+- Week 16 – Analytics Dashboard  
+- Week 20 – Mobile Beta  
+- Week 24 – AI Recommendations  
+
+**Evidence Status:**
+No workload distribution or feasibility assessment provided.
 
 ---
 
-## Risk Indicators
+## Risk Indicator
 
 ### RI-001: Resource Contention Risk
-**Status:** Identified  
-**Description:** Overlapping priorities may cause delivery delays  
 **Impact:** Medium  
 **Likelihood:** Medium  
-
-**Current Claim:**
-- Risk acknowledged but not quantified
-- No mitigation plan documented
+**Affected Milestones:** Week 16, 20, 24  
 
 ---
 
 ## Evidence Assessment
 
-At the time of review:
-- No resource planning documents were found
-- No capacity modeling or workload analysis was provided
-- No hiring or staffing plans were attached
+No resource planning documentation, staffing allocation plans, or workload analysis were provided.
 
-As a result, all capacity-related claims in this document are **not supported by
-verifiable source documents**.
+Therefore, all capacity-related claims are:
+
+**Not supported by verifiable source documents.**
 
 ---
 
-## Verification Notes
-Any output referencing engineering capacity, staffing sufficiency, or parallel
-delivery feasibility must be flagged as:
+## Verification Rule
 
-**“Not found in sources.”**
+Any output referencing confirmed engineering capacity, staffing sufficiency, or validated parallel delivery feasibility must be flagged as:
 
-Additional documentation required:
-- Resource capacity planning report
-- Staffing allocation plan
-- Workload distribution analysis
+**"Not found in sources."**

@@ -2,62 +2,67 @@
 
 **Project:** Enterprise Multi-Agent Copilot  
 **Last Updated:** Week 12, 2024  
+**Primary Milestone:** Advanced Analytics Dashboard – Week 16  
 
 ---
 
 ## Overview
-This document captures the key risks identified during the planning and execution
-phases of the project. It is used to support risk-aware decision-making and to
-validate recommendations produced by the system.
+This register captures key risks impacting Q2 delivery and is used to validate
+execution plans and recommended actions.
 
 ---
 
 ## Identified Risks
 
-### Risk 1: Database Migration Delay
-- **Description:** Delays in completing the database migration may block analytics
-  development and testing activities.
-- **Impact:** High
-- **Likelihood:** Medium
-- **Affected Milestone:** Advanced Analytics Dashboard (Week 16)
-- **Mitigation Strategy:** Assign additional engineering resources and closely monitor
-  migration progress.
-- **Owner:** Database Lead
+### R-001: Database Migration Delay
+**Impact:** High  
+**Likelihood:** Medium  
+**Owner:** Database Lead  
+**Affected Milestone:** Week 16 – Analytics Dashboard  
+**Target Mitigation Date:** Week 13  
+
+**Mitigation:**
+- Complete remaining migration tasks
+- Monitor migration progress weekly
 
 ---
 
-### Risk 2: Security Review Approval Delay
-- **Description:** The pending security review may delay approval for production
-  release of Q2 features.
-- **Impact:** High
-- **Likelihood:** Medium
-- **Affected Milestone:** Advanced Analytics Dashboard (Week 16)
-- **Mitigation Strategy:** Expedite coordination with the security team and prioritize
-  penetration testing.
-- **Owner:** Security Team
+### R-002: Security Review Approval Delay
+**Impact:** High  
+**Likelihood:** Medium  
+**Owner:** Security Team  
+**Affected Milestone:** Week 16 – Analytics Dashboard  
+**Target Mitigation Date:** Week 14  
+
+**Mitigation:**
+- Expedite security coordination
+- Prioritize penetration testing activities
 
 ---
 
-### Risk 3: Resource Constraints
-- **Description:** Limited engineering capacity may impact the ability to deliver
-  multiple Q2 initiatives in parallel.
-- **Impact:** Medium
-- **Likelihood:** Medium
-- **Affected Milestones:** Mobile App Beta (Week 20), AI Recommendations (Week 24)
-- **Mitigation Strategy:** Prioritize critical features and defer non-essential scope.
-- **Owner:** Engineering Lead
+### R-003: Resource Constraints
+**Impact:** Medium  
+**Likelihood:** Medium  
+**Owner:** Engineering Lead  
+**Affected Milestones:** Week 16, 20, 24  
+**Target Mitigation Date:** Week 14  
+
+**Mitigation:**
+- Prioritize critical scope
+- Rebalance workstreams if required
 
 ---
 
-## Risk Monitoring
-All identified risks are reviewed weekly during engineering planning meetings.
-New risks are added as they are identified, and mitigation strategies are updated
-accordingly.
+## Monitoring Cadence
+
+All risks are reviewed weekly during engineering planning meetings.
 
 ---
 
-## Notes
-This document is used by the Planner and Verifier Agents to ensure that execution
-plans and recommendations explicitly account for known project risks. Any risk
-mentioned in outputs must be traceable to this register; otherwise, it should be
-flagged as **“Not found in sources.”**
+## Governance Rule
+
+Any risk referenced in outputs must be traceable to this register.
+
+If a new risk is introduced without documentation, it must be flagged as:
+
+**"Not found in sources."**

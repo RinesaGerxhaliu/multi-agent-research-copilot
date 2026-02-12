@@ -3,6 +3,7 @@
 **Meeting Date:** December 15, 2024  
 **Duration:** 45 minutes  
 **Facilitator:** Engineering Lead  
+**Related Milestone:** Advanced Analytics Dashboard – Week 16  
 
 ---
 
@@ -17,46 +18,59 @@
 
 ## Key Decisions
 
-1. **Database Migration Timeline Adjustment**
-   - Decision: Extend database migration completion from Week 12 to **Week 13**
-   - Rationale: Current progress indicates additional time is required to ensure
-     data integrity and zero-downtime deployment.
+### M-001: Database Migration Timeline Adjustment
+- **Decision:** Extend migration completion to Week 13
+- **Impact:** No change to Week 16 milestone
+- **Owner:** Database Lead
 
-2. **Analytics Dashboard Schedule**
-   - Decision: Maintain the **Week 16** delivery target for the Advanced Analytics
-     Dashboard.
-   - Impact: No change to the Q2 roadmap milestones.
+### M-002: Maintain Dashboard Delivery Date
+- **Decision:** Keep Week 16 delivery target
+- **Impact:** Requires strict dependency monitoring
+- **Owner:** Engineering Lead
 
-3. **Security Review Requirement**
-   - Decision: A completed security review is mandatory prior to releasing the
-     analytics dashboard to production.
-   - Impact: Security review status is now a critical dependency.
+### M-003: Security Review Requirement
+- **Decision:** Security review mandatory before production release
+- **Impact:** Hard dependency for Week 16 release
+- **Owner:** Security Team
 
 ---
 
 ## Risks Identified
 
-- **Migration Delay Risk**
-  - Description: Further delays in the database migration could block analytics
-    development and testing.
-  - Impact Level: High
+### R-M-01: Migration Delay Risk
+- **Impact Level:** High  
+- **Owner:** Database Lead  
 
-- **Security Review Scheduling Risk**
-  - Description: Limited availability of the security team may delay completion
-    of the required review.
-  - Impact Level: Medium
+### R-M-02: Security Review Scheduling Risk
+- **Impact Level:** Medium  
+- **Owner:** Security Team  
 
 ---
 
-## Action Items (Summary)
+## Action Items
 
-- Complete remaining database migration tasks by **Week 13**
-- Follow up with the security team to confirm review schedule
-- Monitor dependencies impacting the analytics dashboard milestone
+- Complete database migration by **Week 13**  
+  - **Owner:** Database Lead  
+
+- Confirm security review schedule  
+  - **Owner:** Security Team  
+  - **Target Confirmation:** Week 13  
+
+- Monitor Week 16 dependency risks  
+  - **Owner:** Engineering Lead  
+  - **Review Cadence:** Weekly  
 
 ---
 
-## Notes
-These meeting notes provide context for planning decisions and dependency
-management and are used as supporting evidence for execution planning and
-risk assessment.
+## Governance Note
+
+These meeting notes serve as supporting evidence for planning and risk mitigation.
+
+Any recommendation that contradicts:
+- Week 16 delivery target  
+- Migration completion by Week 13  
+- Mandatory security review  
+
+must be flagged as:
+
+**"Not found in sources."**

@@ -1,8 +1,9 @@
 # Change Management and Release Readiness Overview
 
 **Project:** Engineering Team Alpha  
-**Version:** 1.0  
+**Version:** 1.1  
 **Last Updated:** Week 12, 2024  
+**Related Milestone:** Advanced Analytics Dashboard – Week 16  
 
 ---
 
@@ -10,29 +11,31 @@
 
 ### CM-001: Change Approval Process
 **Status:** Claimed  
-**Description:** All production changes follow an approved change management process  
-**Requirements:**
-- Change requests documented and reviewed
-- Approval from engineering and product leadership
-- Rollback procedures defined
+**Owner:** Engineering Lead  
+**Target Validation Date:** Week 14  
 
-**Current Claim:**
-- Change approval process stated
-- No change request records or approvals provided
+**Requirements:**
+- Documented change requests
+- Engineering & Product approval
+- Defined rollback procedure
+
+**Evidence Status:**
+No approved change request records or approval logs were found.
 
 ---
 
 ### CM-002: Release Communication
 **Status:** Claimed  
-**Description:** Stakeholders are informed ahead of major releases  
-**Requirements:**
-- Release notes prepared prior to deployment
-- Stakeholder notification via email or dashboard
-- Support team briefed before release
+**Owner:** Product Management  
+**Target Validation Date:** Week 15  
 
-**Current Claim:**
-- Release communication assumed
-- No release notes or communication artifacts attached
+**Requirements:**
+- Documented release notes
+- Stakeholder communication
+- Support team notification
+
+**Evidence Status:**
+No release notes or communication artifacts were found.
 
 ---
 
@@ -40,61 +43,64 @@
 
 ### RR-001: Deployment Readiness
 **Status:** Claimed  
-**Description:** System is ready for production deployment  
+**Owner:** DevOps Lead  
+**Target Validation Date:** Week 15  
+
 **Requirements:**
-- Deployment checklist completed
-- Infrastructure validated
+- Completed deployment checklist
+- Infrastructure validation
 - Monitoring alerts configured
 
-**Current Claim:**
-- Deployment readiness declared
-- No deployment checklist or validation report provided
+**Evidence Status:**
+No deployment checklist or validation report was attached.
 
 ---
 
 ### RR-002: Rollback Preparedness
 **Status:** Claimed  
-**Description:** Rollback procedures are defined and tested  
+**Owner:** DevOps Lead  
+**Target Validation Date:** Week 15  
+
 **Requirements:**
 - Automated rollback scripts
 - Database rollback plan
-- Rollback testing completed
+- Rollback testing documentation
 
-**Current Claim:**
-- Rollback preparedness stated
-- No test results or rollback documentation found
+**Evidence Status:**
+No rollback test results or documentation were found.
 
 ---
 
-## Risk Indicators
+## Risk Indicator
 
-### Risk-CM-01: Release Risk
-**Description:** Lack of documented change and release artifacts may increase
-the risk of failed or delayed production deployments.  
+### Risk-CM-01: Release Control Risk
 **Impact:** Medium  
 **Likelihood:** Medium  
+**Affected Milestone:** Week 16 Analytics Dashboard  
 
 ---
 
 ## Evidence Assessment
 
 At the time of review:
-- No change request records were found
-- No release notes or stakeholder communications were provided
-- No deployment readiness or rollback documentation was attached
 
-As a result, all change management and release readiness claims in this document
-are **not supported by verifiable source documents**.
+- No change request records were found  
+- No release notes were provided  
+- No deployment or rollback documentation was available  
+
+Therefore, all change and release claims are:
+
+**Not supported by verifiable source documents.**
 
 ---
 
-## Verification Notes
-Any system output referencing change approvals, release readiness, or rollback
-preparedness must be flagged as:
+## Verification Rule
 
-**“Not found in sources.”**
+Any output referencing:
+- Approved change processes  
+- Confirmed release readiness  
+- Tested rollback procedures  
 
-Additional documentation required:
-- Approved change request records
-- Release notes and communication logs
-- Deployment and rollback validation reports
+must be flagged as:
+
+**"Not found in sources."**

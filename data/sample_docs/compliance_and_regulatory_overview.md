@@ -1,8 +1,9 @@
 # Compliance and Regulatory Overview
 
 **Project:** Engineering Team Alpha  
-**Version:** 1.0  
+**Version:** 1.1  
 **Last Updated:** Week 12, 2024  
+**Related Milestone:** Advanced Analytics Dashboard – Week 16  
 
 ---
 
@@ -10,30 +11,32 @@
 
 ### CR-001: Data Privacy Compliance
 **Status:** Claimed  
-**Description:** The system complies with applicable data privacy regulations  
+**Owner:** Compliance Lead  
+**Target Validation Date:** Week 14  
+
 **Requirements:**
-- GDPR compliance for EU users
-- Data minimization principles
-- User consent management
+- GDPR compliance (EU users)
+- Data minimization
+- Consent management
 - Right-to-erasure support
 
-**Current Claim:**
-- GDPR compliance assumed
-- No legal assessment or audit report provided
+**Evidence Status:**
+No legal assessment or compliance audit report was provided.
 
 ---
 
 ### CR-002: Data Retention Policy
 **Status:** Claimed  
-**Description:** Data retention policies are defined and enforced  
+**Owner:** Compliance Lead  
+**Target Validation Date:** Week 15  
+
 **Requirements:**
-- Configurable data retention periods
-- Automated data deletion
+- Defined retention periods
+- Automated deletion process
 - Audit trail for data removal
 
-**Current Claim:**
-- Retention policies described at a high level
-- No formal policy document attached
+**Evidence Status:**
+No formal data retention policy document was attached.
 
 ---
 
@@ -41,61 +44,64 @@
 
 ### RC-001: Audit Readiness
 **Status:** Claimed  
-**Description:** The system is prepared for internal and external audits  
+**Owner:** Engineering Lead  
+**Target Validation Date:** Week 15  
+
 **Requirements:**
 - Audit logs enabled
-- Access control reviews
+- Access control review
 - Change management records
 
-**Current Claim:**
-- Audit readiness stated
-- No audit logs or reports available
+**Evidence Status:**
+No audit logs or audit reports were found.
 
 ---
 
 ### RC-002: Industry Standards Alignment
 **Status:** Claimed  
-**Description:** Platform aligns with relevant industry standards  
+**Owner:** Engineering Lead  
+**Target Validation Date:** Week 15  
+
 **Requirements:**
 - Secure development lifecycle
-- Regular compliance reviews
+- Regular compliance review
 - Documentation standards
 
-**Current Claim:**
-- Standards alignment assumed
-- No certification or assessment evidence provided
+**Evidence Status:**
+No certification or standards assessment documentation was provided.
 
 ---
 
-## Risk Considerations
+## Risk Indicator
 
 ### Risk-CR-01: Compliance Verification Risk
-**Description:** Lack of documented compliance evidence may delay approvals or
-increase regulatory risk.  
 **Impact:** Medium  
 **Likelihood:** Medium  
+**Affected Milestone:** Week 16 Analytics Dashboard  
 
 ---
 
 ## Evidence Assessment
 
 At the time of review:
-- No compliance audit reports were found
-- No regulatory assessment documents were provided
-- No formal data retention or privacy policies were attached
 
-Therefore, all compliance-related claims in this document are **not supported by
-verifiable source documents**.
+- No compliance audit reports were found  
+- No regulatory assessment documents were provided  
+- No formal privacy or retention policies were available  
+
+Therefore, all compliance-related claims are:
+
+**Not supported by verifiable source documents.**
 
 ---
 
-## Verification Notes
-Any output referencing compliance status, regulatory alignment, or data privacy
-assurance must be flagged as:
+## Verification Rule
 
-**“Not found in sources.”**
+Any output referencing:
+- Confirmed GDPR compliance  
+- Verified audit readiness  
+- Certified regulatory alignment  
 
-Additional documentation required:
-- Legal or compliance audit reports
-- Formal data privacy and retention policies
-- Regulatory assessment documentation
+must be flagged as:
+
+**"Not found in sources."**
