@@ -4,7 +4,6 @@ import os
 from typing import List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-
 from shared_state import SharedState
 from retrieval.retriever import Retriever
 from utils.planner_prompt_builder import build_planner_prompt
@@ -12,25 +11,23 @@ from utils.planner_prompt_builder import build_planner_prompt
 load_dotenv()
 
 class PlannerAgent:
-    """
-    Stable, governance-locked Planner Agent.
-    Deterministic and evidence-based.
-    """
 
     def __init__(self, model: str | None = None):
         model_name = (
             model
             or os.getenv("PLANNER_AGENT_MODEL")
             or os.getenv("OPENAI_MODEL")
-            or "gpt-4o-mini"
         )
+
+        if not model_name:
+            raise EnvironmentError("Missing model configuration for PlannerAgent.")
 
         self.llm = ChatOpenAI(model=model_name, temperature=0.0)
         self.retriever = Retriever()
 
     def run(self, state: SharedState) -> SharedState:
 
-        retrieved = self.retriever.search(state.task, k=8)
+        retrieved = self.retriever.search(state.task, k=5)
 
         if not retrieved:
             state.plan = ["Not found in sources."]
@@ -41,11 +38,7 @@ class PlannerAgent:
                 "outcome": "not-found",
             })
             return state
-
-        context = "\n\n".join(
-            f"[{r['document_name']} | chunk {r['chunk_id']}]\n{r['snippet']}"
-            for r in retrieved
-        )
+        context = "\n\n".join(r["snippet"] for r in retrieved)
 
         prompt = build_planner_prompt(
             task=state.task,
@@ -72,28 +65,25 @@ class PlannerAgent:
             cleaned = ln.lstrip("-• ").strip()
             if cleaned:
                 steps.append(cleaned)
-                
-        if not (3 <= len(steps) <= 5):
+
+        if not steps:
             state.plan = ["Not found in sources."]
             state.trace.append({
                 "step": "plan",
                 "agent": "planner",
-                "action": f"Invalid step count ({len(steps)})",
+                "action": "No valid steps generated",
                 "outcome": "invalid-structure",
             })
             return state
 
-        state.plan = steps[:5]
+        steps = list(dict.fromkeys(steps))
 
-        used_sources = list({
-            f"{r['document_name']}#chunk_{r['chunk_id']}"
-            for r in retrieved
-        })
+        state.plan = steps[:5]   
 
         state.trace.append({
             "step": "plan",
             "agent": "planner",
-            "action": f"Generated {len(state.plan)} execution steps using {len(used_sources)} evidence chunks",
+            "action": f"Generated {len(state.plan)} execution steps",
             "outcome": "success",
         })
 

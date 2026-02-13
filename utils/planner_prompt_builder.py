@@ -1,26 +1,24 @@
 def build_planner_prompt(task: str, context: str) -> str:
     return f"""
-You are an enterprise delivery architect.
+        You are an enterprise execution planner.
 
-Base your response STRICTLY on the provided evidence.
-Do NOT use external knowledge.
-Do NOT assume missing facts.
+        Based STRICTLY on the retrieved evidence below,
+        extract explicitly documented execution requirements
+        relevant to the user task.
 
-Retrieved evidence:
-{context}
+        STRICT RULES:
+        - Use wording from the evidence.
+        - Do NOT introduce new assumptions.
+        - Do NOT rephrase milestone dates.
+        - Do NOT extract partial fragments.
+        - If insufficient evidence exists, return exactly:
+        Not found in sources.
 
-Rules:
-- Produce 3 to 5 concise execution steps.
-- Each step must be operational (what to do and why).
-- Use only explicitly documented milestones, risks, and decisions.
-- Do NOT introduce new dates, risks, roles, or commitments.
-- Do NOT change the Week 16 milestone.
-- If insufficient evidence exists, return: Not found in sources.
+        Retrieved evidence:
+        {context}
 
-User task:
-{task.strip()}
+        User task:
+        {task.strip()}
 
-Return the steps as plain bullet lines.
-No explanations.
-No numbering.
-""".strip()
+        Return bullet lines only.
+        """.strip()
