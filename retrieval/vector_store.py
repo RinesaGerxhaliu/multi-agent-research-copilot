@@ -11,15 +11,22 @@ load_dotenv()
 
 INDEX_DIR = Path("data/index")
 FAISS_PATH = INDEX_DIR / "faiss_index"
+EMBEDDING_MODEL = "text-embedding-3-small"
+
+def is_valid_index(path: Path) -> bool:
+    return (path / "index.faiss").exists() and (path / "index.pkl").exists()
 
 def build_vector_index() -> FAISS:
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
 
     chunks: List[Document] = load_and_chunk_documents()
 
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small"
-    )
+    if not chunks:
+        raise ValueError("[VectorStore] No chunks found. Cannot build index.")
+
+    print(f"[VectorStore] Using embedding model: {EMBEDDING_MODEL}")
+
+    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
 
     vectorstore = FAISS.from_documents(
         documents=chunks,
@@ -28,16 +35,15 @@ def build_vector_index() -> FAISS:
 
     vectorstore.save_local(str(FAISS_PATH))
 
-    print(
-        f"[VectorStore] Saved FAISS index with {len(chunks)} chunks → {FAISS_PATH}"
-    )
+    print(f"[VectorStore] Saved FAISS index with {len(chunks)} chunks")
+    print(f"[VectorStore] Index path: {FAISS_PATH.resolve()}")
 
     return vectorstore
 
 def load_vector_index() -> FAISS:
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small"
-    )
+    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
+
+    print("[VectorStore] Loading existing FAISS index")
 
     return FAISS.load_local(
         str(FAISS_PATH),
@@ -46,13 +52,10 @@ def load_vector_index() -> FAISS:
     )
 
 def ensure_vector_index() -> FAISS:
-    index_file = FAISS_PATH / "index.faiss"
-
-    if index_file.exists():
-        print("[VectorStore] Loading existing FAISS index")
+    if is_valid_index(FAISS_PATH):
         return load_vector_index()
 
-    print("[VectorStore] No valid index found, building a new one")
+    print("[VectorStore] No valid index found, building new one")
     return build_vector_index()
 
 if __name__ == "__main__":
