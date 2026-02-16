@@ -4,102 +4,77 @@ from utils.verifier_utils import validate_citations, collect_sources, assemble_o
 
 class VerifierAgent:
 
-    CONFIDENCE_THRESHOLD = 0.40
+    CONFIDENCE_THRESHOLD = 0.50
 
     def run(self, state: SharedState) -> SharedState:
 
         if not state.draft or not state.draft.strip():
-            state.final_output = "Not found in sources."
-            state.verification_notes.append("Draft missing — safe fallback triggered.")
-            if avg_conf >= 0.60:
-                outcome = "strong"
-            elif avg_conf >= 0.40:
-                outcome = "moderate"
-            elif avg_conf >= 0.25:
-                outcome = "weak"
-            else:
-                outcome = "blocked"
-
-            state.trace.append({
-                "step": "verify",
-                "agent": "verifier",
-                "action": f"Verification completed (avg_conf={avg_conf})",
-                "outcome": outcome
-            })
-
-            return state
+            return self._block(state, "Draft missing")
 
         draft_clean = state.draft.strip()
+
         if draft_clean.startswith("Not found in sources"):
             state.final_output = draft_clean
-            state.trace.append({
-                "step": "verify",
-                "agent": "verifier",
-                "action": "Upstream rejection propagated",
-                "outcome": "not-found"
-            })
+            self._trace(state, "Upstream rejection propagated", "not-found")
             return state
 
-        if not state.research_notes:
-            state.final_output = "Not found in sources."
-            state.verification_notes.append("No research evidence available — output blocked.")
-            state.trace.append({
-                "step": "verify",
-                "agent": "verifier",
-                "action": "Missing research evidence",
-                "outcome": "blocked"
-            })
-            return state
+        if not draft_clean.startswith("### Executive Summary"):
+            return self._block(state, "Invalid draft structure")
+
+        supported_notes = [
+            n for n in state.research_notes
+            if n.get("evidence", {}).get("supported") is True
+        ]
+
+        if not supported_notes:
+            return self._block(state, "No supported research evidence")
+
+        confidences = [n.get("confidence", 0.0) for n in supported_notes]
+        avg_conf = round(mean(confidences), 2) if confidences else 0.0
+
+        if avg_conf < self.CONFIDENCE_THRESHOLD:
+            return self._block(
+                state,
+                f"Evidence confidence below threshold (avg={avg_conf})"
+            )
 
         citation_issues = validate_citations(state)
-
-        confidences = [note.get("confidence", 0.0) for note in state.research_notes]
-        avg_conf = mean(confidences) if confidences else 0.0
-        avg_conf = round(avg_conf, 2)
-
-        if avg_conf < 0.25:
-            state.final_output = "Not found in sources."
-            state.verification_notes.append(
-                f"Evidence confidence critically low (avg={avg_conf}) — output blocked."
-            )
-            state.trace.append({
-                "step": "verify",
-                "agent": "verifier",
-                "action": "Confidence below critical threshold",
-                "outcome": "blocked"
-            })
-            return state
+        if citation_issues:
+            return self._block(state, "Citation validation failed")
 
         sources = collect_sources(state)
-
         state.final_output = assemble_output(draft_clean, sources)
 
-        if 0.25 <= avg_conf < 0.40:
-            state.verification_notes.append(
-                f"Evidence confidence moderate (avg={avg_conf}). Manual review recommended."
-            )
-        elif 0.40 <= avg_conf < 0.60:
-            state.verification_notes.append(
-                f"Evidence confidence acceptable (avg={avg_conf})."
-            )
-        elif avg_conf >= 0.60:
-            state.verification_notes.append(
-                f"Evidence confidence strong (avg={avg_conf})."
-            )
+        state.verification_notes.append(
+            f"Verification successful (avg_conf={avg_conf})."
+        )
 
+        self._trace(state, f"Verification completed (avg_conf={avg_conf})", "success")
 
-        if citation_issues:
-            state.verification_notes.append(
-                "Incomplete citation structures detected."
-            )
+        return state
 
-        state.verification_notes.append("Verification completed.")
+    def _block(self, state: SharedState, reason: str) -> SharedState:
 
+        state.final_output = """### Executive Summary
+            Not found in sources.
+
+            The requested information is not explicitly documented in the currently indexed enterprise records.
+
+            ### Suggested Next Steps
+            - Verify that the requested risks, owners, mitigation targets, or governance rules are formally documented.
+            - Ensure all relevant project documents are included in the indexed knowledge base.
+            - Refine the task to reference a specific risk ID, milestone, or governance section.
+            """
+
+        state.verification_notes.append(reason)
+
+        self._trace(state, reason, "blocked")
+        return state
+
+    def _trace(self, state: SharedState, action: str, outcome: str):
         state.trace.append({
             "step": "verify",
             "agent": "verifier",
-            "action": f"Verification completed (avg_conf={avg_conf})",
-            "outcome": "success" if avg_conf >= self.CONFIDENCE_THRESHOLD else "warning"
+            "action": action,
+            "outcome": outcome
         })
-
-        return state

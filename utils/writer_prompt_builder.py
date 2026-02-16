@@ -1,90 +1,172 @@
-# utils/writer_prompt_builder.py
-
 from __future__ import annotations
-
 from typing import Tuple, List, Dict, Any
 from statistics import mean
 
+def build_writer_prompt(
+    task: str,
+    supported_notes: List[Dict[str, Any]],
+    intent: str | None = None
+) -> Tuple[str, float]:
 
-def build_writer_prompt(task: str, supported_notes: List[Dict[str, Any]]) -> Tuple[str, float]:
-    insights: list[str] = []
-    actions: list[str] = []
-    confidences: list[float] = []
+    insights: List[str] = []
+    actions: List[str] = []
+    confidences: List[float] = []
+    source_lines: List[str] = []
 
     for note in supported_notes:
-        insight = note.get("insight")
 
+        insight = note.get("insight")
         if not isinstance(insight, str):
             continue
-        insight_clean = insight.strip()
-        if not insight_clean:
-            continue
-        if insight_clean.lower() == "not found in sources.":
-            continue
 
-        owner = "TBD"
-        owners = note.get("owners")
-        if isinstance(owners, list) and owners and isinstance(owners[0], str) and owners[0].strip():
-            owner = owners[0].strip()
-
-        due = "TBD"
-        dues = note.get("due")
-        if isinstance(dues, list) and dues and isinstance(dues[0], str) and dues[0].strip():
-            due = dues[0].strip()
+        insight = insight.strip()
+        if not insight or insight.lower() == "not found in sources.":
+            continue
 
         confidence = float(note.get("confidence", 0.0))
         confidences.append(confidence)
 
-        insights.append(insight_clean)
+        insights.append(insight)
 
-        action_text = " ".join(insight_clean.split())
+        owner = "TBD"
+        due = "TBD"
+
+        owners = note.get("owners")
+        if isinstance(owners, list) and owners:
+            owner = owners[0]
+
+        dues = note.get("due")
+        if isinstance(dues, list) and dues:
+            due = dues[0]
+
+        short_action = insight.split("\n")[0][:150]
 
         actions.append(
             f"- Owner: {owner}\n"
             f"  | Due: {due}\n"
-            f"  | Confidence: {confidence:.2f}\n"
-            f"  | Action: {action_text}"
+            f"  | Confidence: {round(confidence, 2)}\n"
+            f"  | Action: {short_action}"
         )
+
+        for c in note.get("citations", []):
+            doc = c.get("document_name")
+            chunk = c.get("chunk_id")
+            if doc and chunk is not None:
+                source_lines.append(f"- {doc} | chunk {chunk}")
+
+    if not insights:
+        return "Not found in sources.", 0.0
 
     avg_conf = round(mean(confidences), 2) if confidences else 0.0
 
-    insights_text = "\n".join(f"- {i}" for i in insights) if insights else "- None documented"
-    actions_text = "\n\n".join(actions) if actions else "- None documented"
+    insights_text = " ".join(insights)
+    actions_text = "\n\n".join(actions)
+    sources_text = "\n".join(list(dict.fromkeys(source_lines)))
 
-    prompt = f"""
-            You are an enterprise delivery strategist.
+    if intent == "governance":
 
-            STRICT RULES:
-            - Use ONLY the documented insights provided.
-            - Do NOT introduce new risks.
-            - Do NOT introduce new actions.
-            - Do NOT expand beyond the documented insights.
-            - If the insights do not answer the question, respond exactly: Not found in sources.
+        prompt = f"""
+            You are an enterprise governance analyst.
+
+            Use ONLY the documented insights below.
+            Do NOT introduce new information.
 
             User Question:
-            {task.strip()}
+            {task}
 
             Documented Insights:
             {insights_text}
 
-            Return exactly in this structure:
+            Return EXACTLY:
 
             ### Executive Summary
-            Maximum 140 words.
-            Strictly grounded in the documented insights.
+            (Concise summary of documented governance constraints. Max 150 words.)
 
             ### Client-ready Email
-            Subject: Q2 Delivery Priorities - Clinical Analytics Dashboard
+            Subject: Documented Governance Constraints Update
 
             Dear Stakeholders,
 
-            Write a concise professional message strictly based on the documented insights.
+            (Summarize documented governance constraints only.)
 
             Best regards,
-            Rinesa Gerxhaliu
+            Your Name
 
             ### Action List
             {actions_text}
+
             """.strip()
+
+        return prompt, avg_conf
+
+    if intent == "risk_analysis":
+
+        prompt = f"""
+            You are an enterprise risk analyst.
+
+            Use ONLY the documented risks and mitigation targets below.
+
+            User Question:
+            {task}
+
+            Documented Evidence:
+            {insights_text}
+
+            Return EXACTLY:
+
+            ### Executive Summary
+            (Concise summary of documented risks. Max 150 words.)
+
+            ### Client-ready Email
+            Subject: Documented Risk & Mitigation Update
+
+            Dear Stakeholders,
+
+            (Summarize documented risks and mitigation targets only.)
+
+            Best regards,
+            Your Name
+
+            ### Action List
+            {actions_text}
+            """
+        return prompt, avg_conf
+
+    prompt = f"""
+        You are an enterprise delivery analyst.
+
+        Use ONLY the documented insights below.
+        Do NOT introduce new information.
+
+        User Question:
+        {task}
+
+        Documented Insights:
+        {insights_text}
+
+        Return EXACTLY:
+
+        ### Executive Summary
+        Provide a concise executive-level summary (max 120 words).
+        - List each documented risk.
+        - Explicitly include Owner and Mitigation Target for each risk.
+        - Do NOT mention impact levels unless explicitly requested.
+        - Do NOT add interpretation or new information.
+        - Keep tone formal and board-ready.
+
+        ### Client-ready Email
+        Subject: Documented Actions and Controls Update
+
+        Dear Stakeholders,
+
+        (Summarize documented findings only.)
+
+        Best regards,
+        Your Name
+
+        ### Action List
+        {actions_text}
+
+        """.strip()
 
     return prompt, avg_conf

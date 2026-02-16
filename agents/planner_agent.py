@@ -1,18 +1,17 @@
 from __future__ import annotations
-
 import os
-from typing import List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from shared_state import SharedState
-from retrieval.retriever import Retriever
-from utils.planner_prompt_builder import build_planner_prompt
+from utils.security_utils import detect_prompt_injection
+from utils.security_utils import observe_llm_call
 
 load_dotenv()
 
 class PlannerAgent:
 
     def __init__(self, model: str | None = None):
+
         model_name = (
             model
             or os.getenv("PLANNER_AGENT_MODEL")
@@ -23,68 +22,81 @@ class PlannerAgent:
             raise EnvironmentError("Missing model configuration for PlannerAgent.")
 
         self.llm = ChatOpenAI(model=model_name, temperature=0.0)
-        self.retriever = Retriever()
 
     def run(self, state: SharedState) -> SharedState:
 
-        retrieved = self.retriever.search(state.task, k=5)
-
-        if not retrieved:
+        if detect_prompt_injection(state.task):
             state.plan = ["Not found in sources."]
             state.trace.append({
                 "step": "plan",
                 "agent": "planner",
-                "action": "No evidence retrieved",
-                "outcome": "not-found",
-            })
-            return state
-        context = "\n\n".join(r["snippet"] for r in retrieved)
-
-        prompt = build_planner_prompt(
-            task=state.task,
-            context=context
-        )
-
-        response = self.llm.invoke(prompt)
-        raw_text = (getattr(response, "content", "") or "").strip()
-
-        if not raw_text:
-            state.plan = ["Not found in sources."]
-            state.trace.append({
-                "step": "plan",
-                "agent": "planner",
-                "action": "Empty LLM response",
-                "outcome": "empty",
+                "action": "Prompt injection detected",
+                "outcome": "blocked"
             })
             return state
 
-        lines = [ln.strip() for ln in raw_text.splitlines() if ln.strip()]
-        steps: List[str] = []
+        task_lower = state.task.lower()
 
-        for ln in lines:
-            cleaned = ln.lstrip("-• ").strip()
-            if cleaned:
-                steps.append(cleaned)
+        if any(word in task_lower for word in ["risk", "mitigation", "owner"]):
+            state.intent = "risk_analysis"
 
-        if not steps:
-            state.plan = ["Not found in sources."]
-            state.trace.append({
-                "step": "plan",
-                "agent": "planner",
-                "action": "No valid steps generated",
-                "outcome": "invalid-structure",
-            })
-            return state
+        elif any(word in task_lower for word in ["governance", "rule", "milestone"]):
+            state.intent = "governance"
 
-        steps = list(dict.fromkeys(steps))
+        elif any(word in task_lower for word in ["migration", "performance", "capacity"]):
+            state.intent = "structured_extraction"
 
-        state.plan = steps[:5]   
+        else:
+            state.intent = "risk_analysis"
+
+        if state.intent in ["risk_analysis", "governance", "structured_extraction"]:
+            state.plan = [state.task.strip()]
+        else:
+            prompt = f"""
+                You are a senior enterprise planner.
+
+                Decompose the following business task into 3 to 5 concise,
+                execution-focused steps.
+
+                STRICT RULES:
+                - Do NOT invent new facts.
+                - Do NOT introduce new dates or milestones.
+                - Return bullet lines only.
+                - If unclear, return exactly:
+                Not found in sources.
+
+                Task:
+                {state.task.strip()}
+                """
+            response = observe_llm_call(
+                state,
+                "planner",
+                lambda: self.llm.invoke(prompt)
+            )
+            raw_output = response.content.strip()
+
+            if raw_output.lower() == "not found in sources.":
+                state.plan = ["Not found in sources."]
+                state.trace.append({
+                    "step": "plan",
+                    "agent": "planner",
+                    "action": "LLM returned unsupported",
+                    "outcome": "failed"
+                })
+                return state
+
+            lines = [
+                ln.strip().lstrip("-• ")
+                for ln in raw_output.splitlines()
+                if ln.strip()
+            ]
+            state.plan = list(dict.fromkeys(lines))
 
         state.trace.append({
             "step": "plan",
             "agent": "planner",
-            "action": f"Generated {len(state.plan)} execution steps",
-            "outcome": "success",
+            "action": f"Intent classified as {state.intent} | {len(state.plan)} step(s)",
+            "outcome": "success"
         })
 
         return state

@@ -1,44 +1,44 @@
+from __future__ import annotations
 from shared_state import SharedState
-from research.evidence_processor_research_agent import process_step
+from research.evidence_processor import process_step
+from utils.security_utils import detect_prompt_injection
 
 class ResearchAgent:
 
     def run(self, state: SharedState) -> SharedState:
 
-        if not state.plan or state.plan == ["Not found in sources."]:
+        if not state.plan:
+            return state
+
+        if detect_prompt_injection(state.task):
+            state.trace.append({
+                "step": "research",
+                "agent": "researcher",
+                "action": "Prompt injection detected",
+                "outcome": "blocked"
+            })
             return state
 
         research_notes = []
 
-        supported_count = 0
-
         for step in state.plan:
+
             note, outcome = process_step(step)
 
-            if note:
+            if outcome == "supported" and note:
+                if any(existing["insight"] == note["insight"]
+                       for existing in research_notes):
+                    continue
+
                 research_notes.append(note)
 
-            if outcome == "supported":
-                supported_count += 1
-
-            state.trace.append({
-                "step": "research",
-                "agent": "researcher",
-                "action": f"Processed step: {step[:40]}",
-                "outcome": outcome,
-            })
-
-        total_steps = len(state.plan)
-        coverage = round(supported_count / total_steps, 2) if total_steps else 0.0
+        state.research_notes = research_notes
 
         state.trace.append({
             "step": "research",
             "agent": "researcher",
-            "action": f"Coverage: {supported_count}/{total_steps}",
-            "outcome": f"{coverage*100}%"
+            "action": f"{len(research_notes)} evidence entries extracted",
+            "outcome": "success" if research_notes else "not-found"
         })
 
-        state.research_notes = research_notes
         return state
-
-
