@@ -5,8 +5,9 @@ langchain-community
 langchain-openai
 faiss-cpu
 pandas
-rank-bm25
 numpy
+rank-bm25
 python-dotenv
 tiktoken
 streamlit
+openai
