@@ -1,0 +1,201 @@
+# Data Directory – Healthcare Governance Knowledge Base
+
+This folder contains the structured healthcare enterprise documentation used by the Multi-Agent Governance & Risk Intelligence Engine.
+
+The documents simulate a regulated clinical analytics environment and support:
+
+- Healthcare release governance validation
+- Clinical risk register analysis
+- Infrastructure readiness checks
+- Capacity and workload validation
+- Performance & availability monitoring
+- Compliance-oriented decision support
+
+This directory represents the **authoritative clinical knowledge boundary** for the system.
+
+---
+
+## Domain Context
+
+The indexed documents model a Healthcare / Clinical Dashboard program operating under:
+
+- Fixed production milestones (e.g., Week 16 release)
+- Migration & security remediation streams
+- Performance validation requirements
+- Rollback preparedness policies
+- Capacity allocation constraints
+- Governance and escalation rules
+
+The system is designed to simulate enterprise-grade release readiness validation in a healthcare setting where:
+
+- Compliance is mandatory
+- Milestones cannot shift without escalation
+- Security clearance is required before production
+- Performance targets must be validated
+- No undocumented assumptions are allowed
+
+---
+
+## Folder Structure
+data/
+│
+├── sample_docs/
+│ ├── clinical_dashboard_q2_overview.md
+│ ├── clinical_risk_register.md
+│ ├── clinical_program_governance.md
+│ ├── clinical_performance_capacity.md
+│ ├── clinical_change_release_readiness.md
+│ ├── clinical_capacity_allocation.md
+│ ├── clinical_decision_log.md
+| |── clinical_executive_status.md
+| |── clinical_security_summary.md
+│ └── clinical_data_governance.md
+| 
+├── index/
+│ ├── faiss_index.bin
+│ ├── index.pkl
+│ └── metadata_store.json
+│
+└── README.md
+
+---
+
+##  `sample_docs/` – Healthcare Enterprise Documentation
+
+This folder contains structured markdown documents representing a simulated healthcare enterprise program.
+
+### Risk Register
+
+Includes documented risks such as:
+
+- Migration delay risks  
+- Security approval delay risks  
+- Performance optimization gaps  
+- Infrastructure validation risks  
+- Release readiness risks  
+
+Each documented risk typically includes:
+
+- Risk ID  
+- Owner  
+- Mitigation Target  
+- Impact Level  
+
+---
+
+### Governance & Compliance Rules
+
+Documents formal governance controls, including:
+
+- Week 16 milestone immutability  
+- Escalation conditions  
+- Mandatory security review before production  
+- No scope expansion permitted  
+- Capacity validation requirements  
+- Rollback preparedness obligations  
+
+---
+
+### Engineering Capacity Allocation
+
+Covers resource planning and workload management:
+
+- Migration stream  
+- Security remediation stream  
+- Analytics validation stream  
+- Resource contention risks  
+- Weekly review cadence  
+
+---
+
+### Performance & Availability Targets
+
+Defines measurable operational targets:
+
+- 99.9% uptime target  
+- Monitoring configuration status  
+- Average response time (< 350ms)  
+- Internal load testing validation  
+- Performance readiness requirements  
+
+---
+
+## `index/` – Vector Index
+
+This folder contains the FAISS vector index and metadata used for semantic retrieval.
+
+It includes:
+
+- Embedded document chunks  
+- Similarity scores  
+- Document names  
+- Chunk identifiers  
+
+Any modification to `sample_docs/` requires re-indexing before the system can retrieve updated content.
+
+---
+
+## Retrieval & Evidence Policy
+
+The system:
+
+- Uses OpenAI embeddings (`text-embedding-3-small`)
+- Retrieves top-k relevant document chunks
+- Extracts evidence at chunk level
+- Calculates confidence scores
+- Validates citation structure
+- Blocks unsupported claims
+
+The system operates under a strict evidence policy:
+
+> If information is not explicitly documented, it must return  
+> **"Not found in sources."**
+
+No inference.  
+No hallucination.  
+No undocumented assumptions.
+
+---
+
+## Prompt Injection Protection
+
+The system includes detection mechanisms for:
+
+- Instruction override attempts  
+- Governance bypass attempts  
+- Milestone manipulation requests  
+- Mitigation target modification attempts  
+
+If detected:
+
+- Execution is blocked  
+- The trace log records the incident  
+- The system returns a controlled "Not found in sources." response  
+
+---
+
+## Evaluation Alignment
+
+The evaluation test suite validates that the system:
+
+- Correctly extracts documented risks  
+- Identifies mitigation targets and owners  
+- Verifies governance rules  
+- Extracts performance targets  
+- Identifies capacity constraints  
+- Blocks prompt injection attacks  
+- Returns "Not found in sources" when evidence is missing  
+
+---
+
+## Purpose of This Directory
+
+This directory represents a simulated healthcare enterprise governance dataset used to demonstrate:
+
+- Multi-agent structured analysis  
+- Risk intelligence automation  
+- Compliance validation workflows  
+- Evidence-grounded AI reasoning  
+- Secure release readiness evaluation  
+
+All outputs generated by the system must be grounded strictly within these documents.

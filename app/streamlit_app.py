@@ -31,8 +31,6 @@ def normalize_result(raw_result):
         return asdict(raw_result)
     return {}
 
-st.sidebar.header("Guaranteed Demo Tasks")
-
 st.sidebar.markdown("Copy & paste any of the following tasks:")
 
 st.sidebar.code(
