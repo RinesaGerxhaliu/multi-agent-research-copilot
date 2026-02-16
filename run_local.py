@@ -4,50 +4,66 @@ from agents.writer_agent import WriterAgent
 from agents.verifier_agent import VerifierAgent
 from shared_state import SharedState
 
-if __name__ == "__main__":
 
-    task_text = """
-    Complete all migration scripts, finalize penetration testing,
-    and track remediation of critical findings to meet documented
-    milestones and security requirements for the Clinical Analytics Dashboard.
-    """
+def run_pipeline(task_text: str):
+
     state = SharedState(task=task_text.strip())
 
     planner = PlannerAgent()
+    researcher = ResearchAgent()
+    writer = WriterAgent()
+    verifier = VerifierAgent()
+
     state = planner.run(state)
 
     print("\n---- PLAN ----")
-    if state.plan == ["Not found in sources."]:
-        print("Planner failed: No grounded plan.")
-        exit()
-    for step in state.plan:
-        print("-", step)
+    if state.plan:
+        for step in state.plan:
+            print("-", step)
+    else:
+        print("No plan generated.")
 
-    researcher = ResearchAgent()
     state = researcher.run(state)
 
-    print("\n---- RESEARCH NOTES (summary)----")
-    for i, note in enumerate(state.research_notes, 1):
-        owners = note.get("owners") or ["TBD"]
-        dues = note.get("due") or ["TBD"]
-        print(f"Note {i} | Confidence: {note['confidence']:.2f} | Owner: {owners[0]} | Due: {dues[0]}")
+    print("\n---- RESEARCH NOTES ----")
+    if state.research_notes:
+        for i, note in enumerate(state.research_notes, 1):
+            print(f"\nNote {i}")
+            print("Insight:", note.get("insight"))
+            print("Confidence:", note.get("confidence"))
+    else:
+        print("No research evidence found.")
 
-    writer = WriterAgent()
+    print("\nDEBUG INTENT:", state.intent)
+    print("DEBUG RESEARCH NOTES:", len(state.research_notes))
+
     state = writer.run(state)
 
-    print("\n----FINAL DRAFT----\n")
-    print(state.draft)
+    print("\n---- DRAFT ----")
+    print(state.draft if state.draft else "No draft generated.")
 
-    verifier = VerifierAgent()
     state = verifier.run(state)
 
-    print("\n---- VERIFIED OUTPUT ----\n")
-    print(state.final_output)
+    print("\n---- FINAL VERIFIED OUTPUT ----")
+    print(state.final_output if state.final_output else "No final output.")
 
-    print("\n----TRACE LOGS ----")
+    print("\n----TRACE LOGS----")
     for row in state.trace:
         print(row)
 
-    print("\n---- VERIFICATION NOTES ----")
-    for note in state.verification_notes:
-        print("-", note)
+    print("\n----VERIFICATION NOTES----")
+    if state.verification_notes:
+        for note in state.verification_notes:
+            print("-", note)
+    else:
+        print("No verification notes.")
+
+    return state
+
+if __name__ == "__main__":
+
+    task_text = """
+    Summarize the documented Q2 risks that could threaten the Week 16 production release and identify their mitigation targets.
+    """
+
+    run_pipeline(task_text)
